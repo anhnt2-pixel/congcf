@@ -1,1 +1,170 @@
 
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cộng coffee chemistry lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background:#f3f1e7;
+  margin:0;
+  color:#2f2f2f;
+}
+header {
+  background:#485a28;
+  color:#fff;
+  padding:25px 15px;
+  text-align:center;
+}
+header h1 { margin:0; font-size:24px; letter-spacing:1px; }
+.container {
+  max-width:720px;
+  margin:auto;
+  padding:20px;
+}
+.question {
+  background:#fff;
+  padding:18px;
+  margin-bottom:20px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+.question h3 { margin-top:0; }
+.answers label {
+  display:block;
+  margin:8px 0;
+  cursor:pointer;
+}
+.answers input { display:none; }
+.answers span {
+  display:block;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  transition:0.25s;
+}
+.answers span:hover {
+  background:#e7ecd9;
+}
+.answers input:checked + span {
+  background:#485a28;
+  color:#fff;
+  border-color:#485a28;
+}
+button {
+  width:100%;
+  background:#485a28;
+  color:#fff;
+  padding:14px;
+  font-size:16px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  margin-top:10px;
+}
+button:hover { opacity:0.9; }
+#result {
+  text-align:center;
+  animation:fadeIn 0.6s ease;
+}
+img {
+  max-width:100%;
+  border-radius:12px;
+}
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(20px);} 
+  to {opacity:1; transform:translateY(0);} 
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>CỘNG COFFEE CHEMISTRY LAB</h1>
+<p>Cùng tìm hiểu bạn là nhà bác học như thế nào trong phòng thí nghiệm cà phê của Cộng nhé!</p>
+</header>
+
+<div class="container" id="app">
+<form id="quizForm"></form>
+<button onclick="calculateResult()">Xem kết quả</button>
+</div>
+
+<script>
+const questions = [
+"Một buổi sáng lý tưởng của bạn là:",
+"Khi đi cà phê với bạn bè, bạn thường:",
+"Bạn chọn không gian làm việc như thế nào?",
+"Khi chọn đồ uống:",
+"Khi làm việc nhóm, bạn là người:",
+"Một ngày hoàn hảo với bạn là:",
+"Bạn thích ly cà phê của mình:",
+"Bạn thường được bạn bè nhận xét:",
+"Khi đứng trước lựa chọn khó, bạn thường lựa chọn:",
+"Nếu cuộc sống là một 'phản ứng', bạn muốn nó:"
+];
+
+const answers = [
+["Chậm rãi, nhẹ nhàng, không vội","Đúng giờ, có kế hoạch rõ ràng","Bắt đầu với một ý tưởng mới bất chợt"],
+["Ngồi nghe và chia sẻ chuyện nhỏ","Quan sát, nói vừa đủ","Là người nghĩ ra trò vui hoặc chủ đề mới"],
+["Ấm cúng, dễ chịu","Gọn gàng","Sáng tạo"],
+["Ngon, dễ uống là được","Phù hợp với mình, không quá khác lạ","Phải thử cái mới"],
+["Kết nối mọi người","Giữ tiến độ, đảm bảo mọi thứ đúng","Đưa ra ý tưởng khác biệt"],
+["Bình yên, không drama","Làm việc hiệu quả, mọi thứ đúng kế hoạch","Có điều gì đó bất ngờ, thú vị"],
+["Nhiều sữa, nhẹ nhàng","Cân bằng giữa đậm và ngọt","Có hương vị mới, bất ngờ thú vị"],
+["Dễ thương, sống tình cảm","Chín chắn, đáng tin","Sáng tạo, hơi ‘khác người"],
+["Chọn cái khiến mình thấy dễ chịu","Chọn cái hợp lý nhất","Chọn lối đi riêng, chưa ai làm"],
+["Êm ái và lan tỏa","Ổn định và bền vững","Bùng nổ và đầy bất ngờ"]
+];
+
+const form = document.getElementById("quizForm");
+questions.forEach((q,i)=>{
+ let div=document.createElement("div");
+ div.classList.add("question");
+ div.innerHTML=`<h3>${i+1}. ${q}</h3>`;
+ let ans="";
+ ["A","B","C"].forEach((l,j)=>{
+ ans+=`<label><input type="radio" name="q${i}" value="${l}"><span>${l}. ${answers[i][j]}</span></label>`;
+ });
+ div.innerHTML+=`<div class="answers">${ans}</div>`;
+ form.appendChild(div);
+});
+
+function calculateResult(){
+ let count={A:0,B:0,C:0};
+ for(let i=0;i<questions.length;i++){
+ let s=document.querySelector(`input[name=q${i}]:checked`);
+ if(!s){alert("Vui lòng trả lời hết câu hỏi!");return;}
+ count[s.value]++;
+ }
+
+ let result="";
+ if(count.A>count.B && count.A>count.C) result="sweet";
+ else if(count.B>count.A && count.B>count.C) result="classic";
+ else if(count.C>count.A && count.C>count.B) result="creative";
+ else{
+ let q10=document.querySelector('input[name=q9]:checked').value;
+ if(q10=="A") result="sweet";
+ if(q10=="B") result="classic";
+ if(q10=="C") result="creative";
+ }
+
+ let img="";
+ if(result==="sweet") img="sweet.jpg";
+ if(result==="classic") img="classic.jpg";
+ if(result==="creative") img="creat.jpg";
+
+ document.getElementById("app").innerHTML = `
+   <div id="result">
+     <img src="${img}" alt="result">
+     <br><br>
+     <button onclick="location.reload()">Làm lại</button>
+   </div>
+ `;
+}
+</script>
+
+</body>
+</html>
